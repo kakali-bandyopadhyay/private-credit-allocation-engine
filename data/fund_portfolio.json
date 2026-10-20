@@ -1,0 +1,4 @@
+[
+  {"fund_id": "F1", "total_assets": 6000, "qualifying_assets": 4500, "senior_securities": 3500, "cash": 250, "default_funding": "debt"},
+  {"fund_id": "F2", "total_assets": 2500, "qualifying_assets": 1770, "senior_securities": 1600, "cash": 90, "default_funding": "debt"}
+]

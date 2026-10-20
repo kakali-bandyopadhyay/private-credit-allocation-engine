@@ -1,0 +1,7 @@
+[
+  {"fund_id": "F1", "issuer": "Atlas Business Services", "exposure": 280},
+  {"fund_id": "F2", "issuer": "Atlas Business Services", "exposure": 110},
+  {"fund_id": "F3", "issuer": "Northwind Software",      "exposure": 150},
+  {"fund_id": "F5", "issuer": "Summit Logistics",        "exposure": 100},
+  {"fund_id": "F6", "issuer": "Harbor Health Partners",  "exposure": 40}
+]

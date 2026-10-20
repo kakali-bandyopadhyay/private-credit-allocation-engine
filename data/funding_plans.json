@@ -1,0 +1,6 @@
+[
+  {"deal_id": "D008", "fund_id": "F1", "source": "cash", "cash_share": 1.0, "note": "illustrative: paid from cash on hand"},
+  {"deal_id": "D008", "fund_id": "F2", "source": "debt", "cash_share": 0.0, "note": "illustrative: drawn on the credit facility"},
+  {"deal_id": "D013", "fund_id": "F1", "source": "unknown", "cash_share": null, "note": "funding not yet confirmed by Treasury"},
+  {"deal_id": "D013", "fund_id": "F2", "source": "debt", "cash_share": 0.0, "note": "illustrative"}
+]

@@ -1,0 +1,6 @@
+{
+  "Low":      {"owner": "Allocations analyst",            "sla_hours": 24},
+  "Medium":   {"owner": "Allocations VP",                  "sla_hours": 8},
+  "High":     {"owner": "Allocations VP + CCO",            "sla_hours": 4},
+  "Critical": {"owner": "CCO; Board (disinterested directors) where required", "sla_hours": 1}
+}

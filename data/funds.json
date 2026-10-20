@@ -1,0 +1,8 @@
+[
+  {"fund_id": "F1", "name": "Credit Income BDC I",        "vehicle_type": "BDC",           "available_capital": 300, "target_weight": 0.25, "min_ticket": 5,  "max_issuer_pct": 0.05, "rating_floor": "B-",  "excluded_sectors": [],                  "nav": 6000},
+  {"fund_id": "F2", "name": "Private Lending BDC II",     "vehicle_type": "BDC",           "available_capital": 150, "target_weight": 0.15, "min_ticket": 5,  "max_issuer_pct": 0.05, "rating_floor": "B",   "excluded_sectors": ["Energy"],          "nav": 2500},
+  {"fund_id": "F3", "name": "Direct Lending Fund IV",     "vehicle_type": "drawdown",      "available_capital": 400, "target_weight": 0.30, "min_ticket": 10, "max_issuer_pct": 0.08, "rating_floor": "CCC+", "excluded_sectors": [],                  "nav": 5000},
+  {"fund_id": "F4", "name": "Senior Secured Fund II",     "vehicle_type": "drawdown",      "available_capital": 120, "target_weight": 0.10, "min_ticket": 10, "max_issuer_pct": 0.06, "rating_floor": "B",   "excluded_sectors": ["Gaming"],          "nav": 1500},
+  {"fund_id": "F5", "name": "Insurance Credit Mandate A", "vehicle_type": "insurance_SMA", "available_capital": 200, "target_weight": 0.15, "min_ticket": 5,  "max_issuer_pct": 0.03, "rating_floor": "BB-", "excluded_sectors": ["Energy", "Gaming"], "nav": 4000},
+  {"fund_id": "F6", "name": "Evergreen Credit Fund",      "vehicle_type": "evergreen",     "available_capital": 80,  "target_weight": 0.05, "min_ticket": 2,  "max_issuer_pct": 0.04, "rating_floor": "B-",  "excluded_sectors": [],                  "nav": 1200}
+]

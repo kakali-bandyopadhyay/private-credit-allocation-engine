@@ -1,0 +1,15 @@
+[
+  {"deal_id": "D001", "issuer": "Northwind Software", "sector": "Software", "rating": "B", "asset_class": "direct_lending", "instrument": "unitranche", "size": 250, "price": 98.5, "expected_close": "2026-11-05", "qualifying": true},
+  {"deal_id": "D002", "issuer": "Harbor Health Partners", "sector": "Healthcare", "rating": "B+", "asset_class": "direct_lending", "instrument": "first_lien", "size": 180, "price": 99.0, "expected_close": "2026-11-07", "qualifying": true},
+  {"deal_id": "D003", "issuer": "Atlas Business Services", "sector": "Business Services", "rating": "BB-", "asset_class": "direct_lending", "instrument": "first_lien", "size": 400, "price": 99.5, "expected_close": "2026-11-10", "qualifying": true},
+  {"deal_id": "D004", "issuer": "Redrock Energy Midstream", "sector": "Energy", "rating": "B", "asset_class": "direct_lending", "instrument": "first_lien", "size": 120, "price": 98.0, "expected_close": "2026-11-12", "qualifying": true},
+  {"deal_id": "D005", "issuer": "Lucky Star Gaming", "sector": "Gaming", "rating": "B-", "asset_class": "direct_lending", "instrument": "unitranche", "size": 90, "price": 97.5, "expected_close": "2026-11-14", "qualifying": true},
+  {"deal_id": "D006", "issuer": "Keystone Industrials", "sector": "Industrials", "rating": "B", "asset_class": "direct_lending", "instrument": "second_lien", "size": 60, "price": 96.0, "expected_close": "2026-11-17", "qualifying": true},
+  {"deal_id": "D007", "issuer": "Bluebell Consumer Brands", "sector": "Consumer", "rating": null, "asset_class": "direct_lending", "instrument": "unitranche", "size": 110, "price": 98.0, "expected_close": "2026-11-19", "qualifying": true},
+  {"deal_id": "D008", "issuer": "Summit Logistics", "sector": "Industrials", "rating": "BB", "asset_class": "direct_lending", "instrument": "first_lien", "size": 300, "price": 99.75, "expected_close": "2026-11-21", "qualifying": false},
+  {"deal_id": "D009", "issuer": "Crescent Data Centres", "sector": "Software", "rating": "BB-", "asset_class": "direct_lending", "instrument": "first_lien", "size": 220, "price": 99.25, "expected_close": "2026-11-24", "qualifying": true},
+  {"deal_id": "D010", "issuer": "Meridian Veterinary", "sector": "Healthcare", "rating": "B-", "asset_class": "direct_lending", "instrument": "unitranche", "size": 75, "price": 97.0, "expected_close": "2026-11-26", "qualifying": true},
+  {"deal_id": "D011", "issuer": "Pioneer Education", "sector": "Business Services", "rating": "CCC+", "asset_class": "direct_lending", "instrument": "second_lien", "size": 40, "price": 94.5, "expected_close": "2026-11-28", "qualifying": true},
+  {"deal_id": "D012", "issuer": "Northwind Software", "sector": "Software", "rating": "B", "asset_class": "direct_lending", "instrument": "first_lien", "size": 150, "price": 99.0, "expected_close": "2026-12-01", "qualifying": true},
+  {"deal_id": "D013", "issuer": "Orion Fleet Leasing", "sector": "Industrials", "rating": "BB-", "asset_class": "direct_lending", "instrument": "first_lien", "size": 120, "price": 99.5, "expected_close": "2026-12-03", "qualifying": false}
+]
