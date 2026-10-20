@@ -36,6 +36,7 @@ All commands accept --db (default alloc.db) and --data (default data).
 import argparse
 import json
 import os
+import sys
 from pathlib import Path
 
 from . import audit, ops, reports, workflow
@@ -72,6 +73,11 @@ def _table(cur) -> None:
 
 
 def main() -> None:
+    for stream in (sys.stdout, sys.stderr):            # Windows consoles default to a legacy code page
+        try:
+            stream.reconfigure(encoding="utf-8")
+        except (AttributeError, ValueError):
+            pass
     p = argparse.ArgumentParser(prog="alloc", description="Private-credit allocation engine (prototype)")
     sub = p.add_subparsers(dest="cmd", required=True)
 
@@ -109,6 +115,8 @@ def main() -> None:
     sp = add("correct-deal"); sp.add_argument("--deal", required=True); sp.add_argument("--rating", required=True)
     sp.add_argument("--by", required=True); sp.add_argument("--reason", required=True)
     sp = add("evidence"); sp.add_argument("--run", required=True); sp.add_argument("--out")
+    sp = add("trace", help="why each fund was excluded, allocated, capped or escalated, step by step")
+    sp.add_argument("--run", required=True); sp.add_argument("--fund"); sp.add_argument("--out")
     add("exec-summary").add_argument("--out")
     sp = add("handover"); sp.add_argument("--from", dest="from_region", required=True)
     sp.add_argument("--to", dest="to_region", required=True); sp.add_argument("--out")
@@ -252,6 +260,14 @@ def main() -> None:
                     reports.exec_summary(con) if a.cmd == "exec-summary" else
                     reports.attestation(con, a.period, a.by, a.tolerance) if a.cmd == "attest" else
                     reports.handover(con, a.from_region, a.to_region))
+            if a.out:
+                Path(a.out).write_text(text, encoding="utf-8")
+                print(f"Wrote {a.out}")
+            else:
+                print(text)
+        elif a.cmd == "trace":
+            from . import trace
+            text = trace.trace(con, a.run, a.fund, Path(a.data) / "rule_sources.json")
             if a.out:
                 Path(a.out).write_text(text, encoding="utf-8")
                 print(f"Wrote {a.out}")

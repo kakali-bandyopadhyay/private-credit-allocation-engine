@@ -145,6 +145,10 @@ Run R0010 was created and submitted by maker1 in Bengaluru and left for a New Yo
 - **Control attestation (2026-10):** 13 of 13 control tests effective (9: sign-off valid for the current report; 10–11: funding hard stops; 12: approval SLA; 13: reservation review dates).
 - Create-to-approval time shows 0.0 minutes because the demo is scripted; in use it is measured from the audit log timestamps.
 
+## Decision trace (v0.7.2)
+
+`python -m alloc trace --run <id>` follows a run from input to evidence: the run-time input snapshot (recorded in the RUN_CREATED audit entry), every eligibility rule with the value it tested, the limit and BDC calculations for both funding cases, the allocation arithmetic, the outcome, reviewer actions, the audit entries with their hashes, and the provenance of every rule used (basis, assumption, public source, who would have to approve it – data/rule_sources.json). Per fund: gates, capacity and what set it, key share, caps with reasons, the BDC pre-trade check, the final amount and outcome (ALLOCATE, CAP, REBALANCE, DROPPED, EXCLUDE, plus ESCALATE where a High or Critical exception is open or was raised), then exceptions across the lineage, approval, booking and the audit chain. The four outcomes are worked through in [DECISION_PATH.md](DECISION_PATH.md): D009 F5 excluded (restricted issuer), D008 F2 capped at 57.5 (debt-funded BDC, 70.006% after), D003 F1/F2 rebalanced to clear the board-step condition, D013 F1 escalated on unknown funding and F2 at zero because D008 reserves its headroom. Tests check each outcome, the snapshot against the input files, that the trace ties out to the deal size, that every stored reason code has a plain-English meaning, and that every rule and exception type has documented provenance.
+
 ## Limitations and next steps
 
 | Limitation | Effect | Next step |

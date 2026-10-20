@@ -1,0 +1,170 @@
+{
+ "note": "Provenance of every rule and exception type: whether it is a public-source rule, an illustrative mandate term or a prototype design choice, the assumption it makes, and who would have to approve it in practice. Personal prototype; not legal advice. A rule with more than one version has one entry per version (RULE@vN).",
+ "rules": {
+  "ELIG-ASSET-CLASS": {
+   "basis": "illustrative mandate term",
+   "sources": [],
+   "assumption": "Synthetic fund terms in data/funds.json, standing in for a fund's offering documents or investment management agreement. Only direct lending is in scope.",
+   "approval_needed": "Mandate owner and Compliance (guideline coding)"
+  },
+  "ELIG-INSTRUMENT-INS": {
+   "basis": "illustrative mandate term",
+   "sources": [],
+   "assumption": "Synthetic fund terms in data/funds.json, standing in for a fund's offering documents or investment management agreement. The insurance mandate (F5) takes first lien only.",
+   "approval_needed": "Mandate owner and Compliance (guideline coding)"
+  },
+  "ELIG-INSTRUMENT-SENIOR": {
+   "basis": "illustrative mandate term",
+   "sources": [],
+   "assumption": "Synthetic fund terms in data/funds.json, standing in for a fund's offering documents or investment management agreement. F4 takes first lien and unitranche only.",
+   "approval_needed": "Mandate owner and Compliance (guideline coding)"
+  },
+  "ELIG-RATING-FLOOR": {
+   "basis": "illustrative mandate term",
+   "sources": [],
+   "assumption": "Synthetic fund terms in data/funds.json, standing in for a fund's offering documents or investment management agreement. One rating scale (src/alloc/ratings.py); no split ratings or rating-agency differences.",
+   "approval_needed": "Mandate owner and Compliance (guideline coding)"
+  },
+  "ELIG-SECTOR-EXCL": {
+   "basis": "illustrative mandate term",
+   "sources": [],
+   "assumption": "Synthetic fund terms in data/funds.json, standing in for a fund's offering documents or investment management agreement. Sector is one label per deal.",
+   "approval_needed": "Mandate owner and Compliance (guideline coding)"
+  },
+  "ELIG-RESTRICTED": {
+   "basis": "control practice, illustrative list",
+   "sources": [],
+   "assumption": "Restricted list in data/restricted_list.json; matched by issuer name only – no issuer hierarchy or linked instruments.",
+   "approval_needed": "Compliance (owns the restricted list)"
+  },
+  "SIZE-KEY": {
+   "basis": "public filings + prototype policy choice",
+   "sources": [
+    {
+     "title": "Large non-traded BDC, annual report on Form 10-K for FY2025 – allocation section: policies \"generally provide for sharing pro rata based on targeted acquisition size\"",
+     "url": "https://www.sec.gov/Archives/edgar/data/1803498/000180349826000014/bcred-20251231.htm"
+    },
+    {
+     "title": "Co-investment exemptive application, Form 40-APP/A (Amendment No. 2, 24 Apr 2025, SEC file 812-15726) – conditions 1 (same terms; settlement up to ten business days later), 2 (existing investment; approximate proportion) and 5 (fair and equitable allocation)",
+     "url": "https://www.sec.gov/Archives/edgar/data/1803498/000119312525093651/d934153d40appa.htm"
+    }
+   ],
+   "assumption": "The 10-K describes sharing pro rata based on each fund's targeted acquisition size; the co-investment application refers to each participant's investment profile and requires fair and equitable allocation. Using each fund's capacity (the lower of available capital and issuer room) as its targeted size is this prototype's assumption; target weight is the documented alternative.",
+   "approval_needed": "Allocation committee / CCO"
+  },
+  "SIZE-CONC-HEADROOM": {
+   "basis": "illustrative mandate limit",
+   "sources": [],
+   "assumption": "Issuer limit = max_issuer_pct × NAV less existing exposure and exposure reserved by live unbooked runs; issuer-level, single currency.",
+   "approval_needed": "Mandate owner and Compliance"
+  },
+  "SIZE-MIN-TICKET": {
+   "basis": "illustrative operating parameter",
+   "sources": [],
+   "assumption": "Minimum ticket per fund from data/funds.json.",
+   "approval_needed": "Allocations function"
+  },
+  "SIZE-LOT": {
+   "basis": "illustrative operating parameter",
+   "sources": [],
+   "assumption": "Amounts rounded down to 0.5; the remainder goes to the largest rounding residual.",
+   "approval_needed": "Allocations function"
+  },
+  "COINV-SAME-TERMS": {
+   "basis": "public filings, modelled",
+   "sources": [
+    {
+     "title": "Co-investment exemptive application, Form 40-APP/A (Amendment No. 2, 24 Apr 2025, SEC file 812-15726) – conditions 1 (same terms; settlement up to ten business days later), 2 (existing investment; approximate proportion) and 5 (fair and equitable allocation)",
+     "url": "https://www.sec.gov/Archives/edgar/data/1803498/000119312525093651/d934153d40appa.htm"
+    },
+    {
+     "title": "SEC order granting that application: Release IC-35644 (18 Jun 2025), under sections 17(d) and 57(i) and rule 17d-1",
+     "url": "https://www.sec.gov/files/rules/ic/2025/ic-35644.pdf"
+    }
+   ],
+   "assumption": "Same instrument and price; settlement within 10 business days (illustrative parameter).",
+   "approval_needed": "Fund Legal and Compliance against the fund's own exemptive order"
+  },
+  "COINV-EXISTING-INVESTMENT": {
+   "basis": "public filings, modelled",
+   "sources": [
+    {
+     "title": "Co-investment exemptive application, Form 40-APP/A (Amendment No. 2, 24 Apr 2025, SEC file 812-15726) – conditions 1 (same terms; settlement up to ten business days later), 2 (existing investment; approximate proportion) and 5 (fair and equitable allocation)",
+     "url": "https://www.sec.gov/Archives/edgar/data/1803498/000119312525093651/d934153d40appa.htm"
+    },
+    {
+     "title": "SEC order granting that application: Release IC-35644 (18 Jun 2025), under sections 17(d) and 57(i) and rule 17d-1",
+     "url": "https://www.sec.gov/files/rules/ic/2025/ic-35644.pdf"
+    },
+    {
+     "title": "Investment Company Act of 1940, section 57 – 15 U.S.C. 80a-56",
+     "url": "https://www.law.cornell.edu/uscode/text/15/80a-56"
+    }
+   ],
+   "assumption": "If an affiliate already holds the issuer, a regulated fund participates in approximate proportion (±10%, illustrative) or a board step is needed; issuer-level holdings.",
+   "approval_needed": "Fund Legal and Compliance; board approval where the order requires it"
+  },
+  "CTRL-REVIEW": {
+   "basis": "illustrative control parameter",
+   "sources": [],
+   "assumption": "Fairness tolerance 5%, approval SLA 8 hours, reservation review 72 hours.",
+   "approval_needed": "CCO / control owner"
+  },
+  "FUNDING-UNKNOWN": {
+   "basis": "prototype control design",
+   "sources": [],
+   "assumption": "A BDC line with unconfirmed funding is sized on the most conservative case and cannot be approved or booked until funding is confirmed or the run is rejected or released.",
+   "approval_needed": "Compliance with Treasury"
+  },
+  "DQ-MISSING_RATING": {
+   "basis": "data-quality control",
+   "sources": [],
+   "assumption": "A deal with no rating is loaded but blocked; correction needs a source and a reason.",
+   "approval_needed": "Data owner"
+  },
+  "SIZE-UNDERSUBSCRIBED": {
+   "basis": "operational exception",
+   "sources": [],
+   "assumption": "Raised when eligible funds cannot absorb the whole deal.",
+   "approval_needed": "Allocations VP"
+  },
+  "ELIG-NONE": {
+   "basis": "operational exception",
+   "sources": [],
+   "assumption": "Raised when no fund passes every gate.",
+   "approval_needed": "Allocations VP"
+  },
+  "RECON": {
+   "basis": "operational control",
+   "sources": [],
+   "assumption": "Approved vs booked vs ledger, plus a control total; any difference is a break with an owner and SLA.",
+   "approval_needed": "Operations"
+  },
+  "SIZE-BDC-QUALIFYING-HEADROOM@v1": {
+   "basis": "public statute, modelled under stated assumptions (superseded by v2)",
+   "sources": [
+    {
+     "title": "Investment Company Act of 1940, section 55(a) – 15 U.S.C. 80a-54",
+     "url": "https://www.law.cornell.edu/uscode/text/15/80a-54"
+    }
+   ],
+   "assumption": "70% qualifying-asset test only; the new asset is added to total assets only (as if debt-funded); no asset-coverage test, no funding plan and no reservations for other live runs. Simplified book-value balance sheet; illustrative asset classification.",
+   "approval_needed": "Fund Legal and Compliance must validate asset classification and the calculation basis before any real use"
+  },
+  "SIZE-BDC-QUALIFYING-HEADROOM@v2": {
+   "basis": "public statute, modelled under stated assumptions",
+   "sources": [
+    {
+     "title": "Investment Company Act of 1940, section 55(a) – 15 U.S.C. 80a-54",
+     "url": "https://www.law.cornell.edu/uscode/text/15/80a-54"
+    },
+    {
+     "title": "Investment Company Act of 1940, sections 18 and 61(a) – 15 U.S.C. 80a-60 (200% default; 150% only if the conditions in section 61(a)(2), including the required approval, are met)",
+     "url": "https://www.law.cornell.edu/uscode/text/15/80a-60"
+    }
+   ],
+   "assumption": "Simplified book-value balance sheet (qualifying assets Q, total assets T, senior securities S); cash treated as qualifying; the deal's qualifying flag is an illustrative classification; funding plan (cash, debt, mixed) is an input and unknown funding uses the most conservative case. The 150% asset-coverage minimum assumes each synthetic BDC has met the section 61(a)(2) conditions, including the required approval (recorded per fund in data/fund_portfolio.json); without them the minimum is 200%.",
+   "approval_needed": "Fund Legal and Compliance must validate asset classification and the calculation basis before any real use"
+  }
+ }
+}

@@ -218,6 +218,7 @@ class RunResult:
     unallocated: float = 0.0
     source_run_id: str | None = None
     pretrade_checks: list[dict] = field(default_factory=list)   # B06: evidence of pre-trade regulatory caps
+    inputs: dict = field(default_factory=dict)                   # v0.7.2: run-time snapshot of deal and fund inputs
 
 
 def _now() -> str:
@@ -310,6 +311,7 @@ def _finalise(con, deal: dict, funds: list[dict], rules: dict, res: RunResult, h
         "source_run_id": res.source_run_id, "policy_version": policy_version(rules),
         "final": {ln["fund_id"]: ln["final_amt"] for ln in res.lines},
         "pretrade_checks": res.pretrade_checks,
+        "inputs": res.inputs,
         "exceptions": [e["exc_id"] for e in exc]})
     con.commit()
     return res
@@ -351,9 +353,16 @@ def run_allocation(con: sqlite3.Connection, deal_id: str, mode: str = "hypo", ke
         reserved_cap[fid] = reserved_cap.get(fid, 0.0) + amt
         if iss == deal["issuer"]:
             reserved_iss[fid] = reserved_iss.get(fid, 0.0) + amt
+    res.inputs = {"deal": dict(deal), "funds": {}}
     for f in funds:
         reasons = check_eligibility(deal, f, rules, restricted)
         gates[f["fund_id"]] = reasons
+        res.inputs["funds"][f["fund_id"]] = {
+            k: f[k] for k in ("vehicle_type", "nav", "available_capital", "max_issuer_pct", "rating_floor", "min_ticket",
+                              "excluded_sectors", "target_weight")} | {
+            "existing_exposure": holders.get(f["fund_id"], 0.0), "reserved_capital": reserved_cap.get(f["fund_id"], 0.0),
+            "reserved_issuer": reserved_iss.get(f["fund_id"], 0.0),
+            "restricted": None in restricted or f["fund_id"] in restricted}
         if reasons:
             continue
         headroom = f["max_issuer_pct"] * f["nav"] - holders.get(f["fund_id"], 0.0) - reserved_iss.get(f["fund_id"], 0.0)

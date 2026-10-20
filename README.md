@@ -10,7 +10,61 @@ A solution accelerator prototype (personal build) for an end-to-end **multi-fund
 
 https://github.com/user-attachments/assets/922c1c92-f02d-47d9-b03b-efa1113f0658
 
-**Python 3.11+ · SQLite · pydantic · openpyxl · pytest (80 tests) · no external services**
+**Python 3.11+ · SQLite · pydantic · openpyxl · pytest (89 tests) · no external services**
+
+## One decision, end to end – deal D008, fund F2
+
+Follow one allocation from input to evidence. Everything below is reproducible from the synthetic data: `python -m alloc load --reset`, `python -m alloc demo`, then `python -m alloc trace --run R0008 --fund F2`. Full sample output: [docs/samples/trace_R0008_D008.md](docs/samples/trace_R0008_D008.md).
+
+| Step | What happens | Where to check |
+|---|---|---|
+| **Input** | Deal D008 Summit Logistics: $300m, first lien, rating BB, a **non-qualifying** asset for the BDC 70% test (illustrative classification). Fund F2: a BDC with NAV 2,500, 82 of capital still free after earlier deals, issuer limit 5% of NAV; its funding plan for this deal is **debt** | [data/deals.json](data/deals.json), [data/funds.json](data/funds.json), [data/funding_plans.json](data/funding_plans.json); run-time snapshot in the `RUN_CREATED` audit entry |
+| **Rules** | Eligibility gates pass (asset class, rating floor, sector, restricted list). Limits: issuer limit (`SIZE-CONC-HEADROOM`, illustrative mandate term) and the pre-trade BDC check (`SIZE-BDC-QUALIFYING-HEADROOM`, modelled on Investment Company Act s.55(a) and s.61(a) under stated assumptions, including that the fund has the approval needed for the 150% asset-coverage minimum) | [data/rules.json](data/rules.json), provenance in [data/rule_sources.json](data/rule_sources.json), code in [src/alloc/allocate.py](src/alloc/allocate.py) and [src/alloc/bdc.py](src/alloc/bdc.py) |
+| **Calculation** | Capacity = min(free capital 82, issuer room 125) = 82. BDC debt case: Q / 0.70 − T = 1,838 / 0.70 − 2,568 = 57.71 → rounded down to the lot: **57.5** (the cash case would allow only 40.0). Key share = 300 × 82 ÷ 409.5 = 60.07 → capped at 57.5; the 2.5 excess is re-split to other eligible funds | trace section 2 |
+| **Outcome** | F2 gets **57.5** and stays at **70.006%** qualifying assets (at 60 it would have been 69.94%). Because an affiliated fund (F5) already holds the issuer and F2 does not, a **Critical** co-investment exception (E0009) goes to the CCO / board | trace sections 2 and 6 |
+| **Human action** | A checker who is not the maker approves with a recorded rationale (“board step obtained”, illustrative); the rationale becomes the exception's resolution. Unknown funding would have been a hard stop that no rationale can clear (see deal D013) | trace section 3, [src/alloc/workflow.py](src/alloc/workflow.py) |
+| **Audit evidence** | RUN_CREATED → SUBMITTED → APPROVED → BOOKED → RECONCILED, each hash-chained to the previous entry; booked 57.5 = ledger 57.5; chain verified | trace sections 4–5, `python -m alloc evidence --run R0008` |
+
+**What to notice:** each rule can only do one thing – a gate excludes, a limit caps, a co-investment condition escalates, a person decides; funding changes the answer (57.5 vs 40.0); and every rule in the trace lists its basis, its assumption and who would have to approve it in practice, so modelled rules are never presented as validated requirements. Two more samples: an exclusion ([D009, F5](docs/samples/trace_R0005_D009_F5.md)) and a hard stop with reserved headroom ([D013](docs/samples/trace_R0009_D013.md)).
+
+## Operating workflow – who does what
+
+```mermaid
+flowchart LR
+    subgraph DEAL["Deal team"]
+        A1["New deal and<br/>funding plan"]
+    end
+    subgraph ALLOC["Allocations analyst (maker)"]
+        A2["Run hypo or live<br/>allocation"] --> A3["Submit"]
+    end
+    subgraph ENG["Engine"]
+        G{"Eligibility gates"} -- "fail" --> X["Exclude with<br/>reason code"]
+        G -- "pass" --> L["Limits: issuer, BDC<br/>pre-trade, reservations"] --> K["Size by documented key,<br/>min ticket, lots"] --> C{"Co-investment<br/>conditions"}
+    end
+    subgraph RISK["Compliance / CCO / board"]
+        R1["Resolve Critical or High<br/>exceptions; confirm funding"]
+    end
+    subgraph CHK["Checker (not the maker)"]
+        P{"Approve or reject<br/>with rationale"}
+    end
+    subgraph OPS["Operations"]
+        O1["Book"] --> O2["Reconcile approved /<br/>booked / ledger"]
+    end
+    subgraph REV["Independent reviewer"]
+        V["Fairness sign-off,<br/>control attestation"]
+    end
+    A1 --> A2
+    A2 --> G
+    C -- "condition not met,<br/>funding unknown" --> R1
+    C -- "met" --> A3
+    R1 --> A3
+    A3 --> P
+    P -- "hard stop open" --> R1
+    P -- "approved" --> O1
+    O2 --> V
+```
+
+Every arrow writes to the hash-chained audit log. Assumptions and sources for each rule: [data/rule_sources.json](data/rule_sources.json) and [docs/DECISION_PATH.md](docs/DECISION_PATH.md).
 
 ---
 
@@ -42,6 +96,8 @@ flowchart TB
     OUT -.-> AUD
 ```
 
+**Why the engine allocates, caps, excludes or escalates** – the decision path with inputs, stated assumptions, a worked scenario for each outcome, and the public sources behind the regulatory logic: [docs/DECISION_PATH.md](docs/DECISION_PATH.md). Trace any run with `python -m alloc trace --run <id>`.
+
 Preventive controls (intake → maker-checker) stop a bad allocation before it is booked. Detective controls (reconciliation, surveillance, attestation) re-check what actually happened downstream. Design decisions are recorded in [docs/adr](docs/adr).
 
 ## Quickstart (Windows PowerShell; on macOS/Linux use `source .venv/bin/activate`)
@@ -50,10 +106,11 @@ Preventive controls (intake → maker-checker) stop a bad allocation before it i
 python -m venv .venv
 .venv\Scripts\activate
 pip install -e ".[dev]"
-pytest                                    # 80 passed
+pytest                                    # 89 passed
 
 python -m alloc load --reset              # 6 funds, 13 deals; D007 flagged (missing rating)
 python -m alloc demo                      # all six mock cases end to end, prints the numbers
+python -m alloc trace --run R0008 --fund F2   # why a fund was excluded, allocated, capped or escalated, step by step
 python -m alloc evidence --run R0004      # audit evidence for one allocation
 python -m alloc exec-summary              # one-page status for management
 python -m alloc handover --from Bengaluru --to "New York"
@@ -93,27 +150,37 @@ Step-by-step commands for each stage are in the build guides (below) and `python
 | Data quality and reconciliation across systems | intake DQ, `correct-deal`, three-way `reconcile`, `resolve-break` |
 | Follow-the-sun handover, procedures, BCP | `handover`, [docs/RUNBOOK.md](docs/RUNBOOK.md) |
 | Ad hoc analysis | `queries/*.sql` via `python -m alloc sql` |
-| Audit and regulatory evidence | `evidence --run <id>`, `audit verify`, `audit trail --entity <id>` |
+| Audit and regulatory evidence | `evidence --run <id>`, `trace --run <id>`, `audit verify`, `audit trail --entity <id>` |
 | Concise executive updates and decisions | `exec-summary`, `decisions` (owner, deadline, evidence per decision) |
-| Requirements, testing, change control | [docs/SPEC.md](docs/SPEC.md), 80 pytest tests, build guides |
+| Requirements, testing, change control | [docs/SPEC.md](docs/SPEC.md), 89 pytest tests, build guides |
 
 ## Repository
 
 ```
 src/alloc/      intake, ratings, allocate, workflow, audit, ops, reports, CLI
-data/           synthetic funds, deals, holdings, restricted list, rules, escalation matrix
+data/           synthetic funds, deals, holdings, restricted list, rules, rule provenance (rule_sources.json), escalation matrix
 queries/        SQL pack for typical ad hoc questions
-tests/          80 tests: maths, gates, conditions, controls, reconciliation, reports, end-to-end demo
-docs/           SPEC, FINDINGS, RUNBOOK, ADRs 0001–0007, build guides B01–B07 (B07 includes the B07.1 control fixes)
+tests/          89 tests: maths, gates, conditions, controls, reconciliation, reports, decision trace, end-to-end demo
+docs/           SPEC, FINDINGS, RUNBOOK, DECISION_PATH (with public sources), samples/ (generated traces), ADRs 0001–0007, build guides B01–B07 (B07 includes the B07.1 control fixes)
 ```
 
 ## Build guides
 
 [B01 intake and DQ](docs/B01_GUIDE.md) · [B02 eligibility, sizing, co-investment](docs/B02_GUIDE.md) · [B03 maker-checker and audit log](docs/B03_GUIDE.md) · [B04 booking, reconciliation, surveillance](docs/B04_GUIDE.md) · [B05 mock cases and evidence](docs/B05_GUIDE.md) · [B06 pre-trade headroom and fairness](docs/B06_GUIDE.md) · [B07 funding, reservations, sign-off, decision pack; B07.1 control fixes](docs/B07_GUIDE.md)
 
-## Limitations
+## What this prototype does not establish
 
-Prototype scope: single-currency, issuer-level holdings ("same security" approximated by "same issuer"), simplified BDC balance sheet, no pricing or valuation, no UI, no live integrations. See [docs/FINDINGS.md](docs/FINDINGS.md#limitations-and-next-steps).
+- **Production readiness.** No live integrations (order management, accounting, treasury), no UI, no access control beyond maker ≠ checker, SQLite only.
+- **Regulatory interpretation.** The BDC and co-investment logic is modelled from public statute and filings under stated assumptions. It is not legal advice and has not been validated by any Legal or Compliance function; asset classification and the calculation basis would need their sign-off.
+- **Any firm's policy.** Mandate terms, limits, keys, tolerances and SLAs are illustrative.
+- **Real-world impact.** All data is synthetic; no time saved or error reduction has been measured.
+- **Scope.** Single currency; issuer-level holdings ("same security" approximated by "same issuer"); simplified book-value balance sheet; no pricing or valuation.
+
+Next steps and the full list: [docs/FINDINGS.md](docs/FINDINGS.md#limitations-and-next-steps).
+
+## Related project
+
+[genai-adoption-control-tower](https://github.com/kakali-bandyopadhyay/genai-adoption-control-tower) applies the same pattern to a different problem – moving GenAI use cases from pilot to production. Both are controlled decision workflows: versioned rules, a decision a person is accountable for, exceptions with owners and deadlines, and evidence that ties every outcome back to its inputs.
 
 ## Licence
 
