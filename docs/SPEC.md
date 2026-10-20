@@ -119,14 +119,14 @@ No LLM in the core. **Stretch (only if everything else meets the bar):** an LLM 
 
 ## 9. Definition of done (gate before the repo goes public)
 
-- [ ] Runs end to end from one command on a clean checkout; README steps verified
+- [x] Runs end to end from one command on a clean checkout; README steps verified
 - [x] pytest passes, covering the allocation maths and every rule type; no hard-coded results
 - [x] Data labelled synthetic; policies labelled illustrative; no claim to be any firm's policy
 - [x] Every allocation traceable; audit chain verifies; maker ≠ checker enforced
 - [x] Reconciliation: zero unexplained breaks (injected breaks are detected and explained)
 - [x] Diagram, architecture decision record (ADR), FINDINGS.md with numbers from actual runs
-- [ ] No secrets, no client or NDA material; full git routine done
-- [ ] Independent review passed
+- [x] No secrets, no client or NDA material; full git routine done; history rewritten and every commit scanned for application-specific terms
+- [x] Independent review passed
 
 ---
 
