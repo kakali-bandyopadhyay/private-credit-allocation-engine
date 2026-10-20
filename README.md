@@ -6,6 +6,10 @@ A solution accelerator prototype (personal build) for an end-to-end **multi-fund
 >
 > **Regulatory boundary.** The BDC checks (70% qualifying assets, 150% asset coverage, funding scenarios) are a **model under stated assumptions** – simplified book-value balance sheet, cash treated as qualifying, illustrative classifications. They are not legal advice and not a production-ready regulatory control. Classification and the calculation basis would need validation against authoritative guidance and by the fund's Legal and Compliance teams before any real use.
 
+## Walkthrough (2 min, synthetic data)
+
+https://github.com/user-attachments/assets/922c1c92-f02d-47d9-b03b-efa1113f0658
+
 **Python 3.11+ · SQLite · pydantic · openpyxl · pytest (80 tests) · no external services**
 
 ---
