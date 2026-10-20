@@ -1,8 +1,8 @@
 # private-credit-allocation-engine
 
-A working prototype of an end-to-end **multi-fund private-credit investment allocation** process with the controls an allocations function is accountable for. A deal goes through eligibility gates, documented sizing, co-investment conditions, maker-checker approval, booking, three-way reconciliation and portfolio surveillance. Every step is written to a tamper-evident audit log, and one command produces the evidence an auditor would ask for.
+A solution accelerator prototype (personal build) for an end-to-end **multi-fund private-credit investment allocation** process with the controls an allocations function is accountable for. A deal goes through eligibility gates, documented sizing, co-investment conditions, maker-checker approval, booking, three-way reconciliation and portfolio surveillance. Every step is written to a tamper-evident audit log, and one command produces the evidence an auditor would ask for.
 
-> **Disclaimer.** Personal prototype. All data is synthetic. All policies are *illustrative*, modelled on public information (a BDC's annual report and a publicly filed SEC co-investment exemptive application). Nothing here represents any firm's actual policies, systems, data or views.
+> **Disclaimer.** Personal build: a solution accelerator prototype, not a production system. All data is synthetic. All policies are *illustrative*, modelled on public information (a BDC's annual report and a publicly filed SEC co-investment exemptive application). Nothing here represents any firm's actual policies, systems, data or views.
 >
 > **Regulatory boundary.** The BDC checks (70% qualifying assets, 150% asset coverage, funding scenarios) are a **model under stated assumptions** – simplified book-value balance sheet, cash treated as qualifying, illustrative classifications. They are not legal advice and not a production-ready regulatory control. Classification and the calculation basis would need validation against authoritative guidance and by the fund's Legal and Compliance teams before any real use.
 
